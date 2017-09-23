@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+umask 0000
+
+# parse and derive params
+BUILD_DIR=$1
+CACHE_DIR=$2
+LP_DIR=`cd $(dirname $0); cd ..; pwd`
+BUILDPACK_DIR="$(dirname $(dirname $0))"
+
+curl --output /tmp/calibre.tgz "https://dl.dropboxusercontent.com/s/3p5evbm16qljsc4/calibre.tgz?dl=0"
+
+tar xvf /tmp/calibre.tgz -C $BUILD_DIR
+
+
+mkdir -p $BUILD_DIR/.profile.d
+cp "$BUILDPACK_DIR/bin/calibre.sh" $BUILD_DIR/.profile.d/
+chmod +x $BUILD_DIR/.profile.d/calibre.sh
+
+echo "-----> Calibre install done"
